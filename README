@@ -1,0 +1,461 @@
+/**********************************************************
+* Project 4: Gerp
+* Comp 15 Fall 2022
+* README
+* Author: Doga Kilinc & Cansu Birsen
+*********************************************************/
+
+(a) Title of the homework and the author
+Project 4 (Comp 15): Gerp, Doga Kilinc & Cansu Birsen
+---------------------------------------------------------------------------
+
+(b) The purpose of the program is 
+The purpose of this program is to index and search files for specific words. 
+The user first provides a directory of files and an output file to print the 
+search results to. Then the program asks for user commands, and the user can 
+implement case sensitive or insensitive word searches. The user can also change
+the current output file to a new one and quit the program whenever they want.
+
+---------------------------------------------------------------------------
+
+(c) Acknowledgment for help
+cplusplus.com website was used for the documentation of isalnum function and
+std::list, std::vector, and std::set usage.
+---------------------------------------------------------------------------
+
+(d) Files provided and their descriptions
+MapBuilder.h         : This file contains the MapBuilder class interface and
+member function declarations, as well as the definition of the struct 
+CaseSensitive. MapBuilder is a class that creates an empty hash map that can 
+store a given word and its path and line information. As the key, the map 
+stores the lower case version of the word. As the value, it stores a list of 
+pointers to CaseSensitive structs that hold the original version of the word
+and path&line information for that version. This file also contains the 
+CaseSensitive struct, which holds the original version of a given word and a 
+pointer to a string set of path&line information for a particular version of a 
+word.
+
+MapBuilder.cpp       : This file contains the implementation of the MapBuilder
+class. MapBuilder is a class that creates a hash map array initialized empty 
+with a size of 100. It can store a given a word and its path and line 
+information. It stores the lower case version of the word as the key, and a 
+list of pointers to CaseSensitive structs as the value. These key-value pairs
+are put in ChainNode structs and each ChainNode struct is placed into the array
+using the hash function. When a collision occurs, the program handles the 
+situation by creating a linked list of ChainNode structs at that particular 
+index. When the load factor exceeds 0.7, the program expands the array of 
+pointers to ChainNode structs by traversing the old array and rehashing all the
+ChainNodes to a new map with increased capacity. The program also has functions
+that make it possible to do case sensitive or insensitive searches in the map. 
+Case insensitive search returns a list of pointers to CaseSensitive structs 
+holding different versions of the word, while the case sensitive search returns
+a pointer to a particular CaseSensitive struct holding the information of a 
+required version of a word.
+
+DictionaryBuilder.h  : This program contains the DictionaryBuilder class 
+interface and the member function declarations. DictionaryBuilder is a class 
+that reads all accessible files in a given directory and records each word and 
+its path and line information in a map. A user can use this program with 
+specific commands. If the user enters the command "@i" or "@insensitive" 
+followed by a word, the program implements a case insensitive search in the 
+files, and prints the information (the file location, line number, and line 
+itself) about the word to the provided output file. If the word does not exist 
+in any of the files, the program prints an appropriate message instead. The 
+user can also implement a case sensitive search that provides a similar output
+by just providing the word itself as a command. When doing a word search, the 
+program eliminates the leading and trailing non alphanumeric characters in 
+the word the user enters. The program also avoids printing duplicate 
+information if the searched word is found more than once in the same line. 
+Lastly, the user can change the output file with command "@f" folllowed by 
+the new output file name and use the command "@q" or "@quit" to end the 
+program. 
+
+DictionaryBuilder.cpp: This file contains the implementation of the 
+DictionaryBuilder class. DictionaryBuilder is a class that reads all accessible
+files in a given directory by using the FSTree and DirNode classes and 
+retriving the file paths for each. The class then records each line associated 
+with a file using a vector of pathsAndFiles structs. Each struct holds a 
+pointer to a file path and a pointer to a vector whose each element represents
+a line. Then, the program traverses each line and inserts each word in the line
+and its path and line information in a map using the MapBuilder class. A user
+can use this program with specific commands. If the user enters the command
+"@i" or "@insensitive" followed by a word, the program implements a case 
+insensitive search in the files, and prints the information (the file location,
+line number, and line itself) about the word to the provided output file. The
+user can also implement a case sensitive search that provides a similar output
+by just providing the word itself as a command. When doing a word search, the 
+program eliminates the leading and trailing non alphanumeric characters in the 
+word the user enters. The program also avoids printing duplicate information 
+if the searched word is found more than once in the same line. Lastly, the user
+can change the output file with command "@f" folllowed by the new output file 
+name and use the command "@q" or "@quit" to end the program.   
+
+main.cpp             : This is the driver file, which creates an instance of 
+the DictionaryBuilder class. Command line arguments should be 
+"./gerp inputDirectory outputFile" to invoke this program. If invalid command
+line arguments are given, it throws and error message and terminates. If the 
+command line arguments are valid, this file calls query function of the to 
+DictionaryBuilder class to ask user for commands and perform neccessary 
+operations.
+
+unit_tests.h         : The unit tests are to check the accuracy of the 
+functions in the MapBuilder and DictionaryBuilder classes. The tests are 
+designed separately for each function. While preparing the tests, edge cases 
+are considered and tested.
+
+emptyFile.txt                  : empty file used in testing
+
+sampleFile.txt                 : a file with three simple line used for testing
+
+tinyDataQuery.txt              : a file with various commands to use on the 
+tinyData directory provided by the CS department to test our implementation of 
+gerp.
+
+tinyDataQuery_ref.txt          : a file with various commands to use on the 
+tinyData directory provided by the CS department to test reference 
+implementation of gerp.
+
+tinyData_ourSorted.txt         : a file with the sorted results of the commands
+in tinyDataQuery.txt implemented on our implementation of gerp
+
+tinyData_refSorted.txt         : a file with the sorted results of the commands
+in tinyDataQuery_ref.txt implemented on reference implementation of gerp
+
+tinyData_newourSorted.txt      : a sorted file that one of the commands in the
+tinyDataQuery.txt asks our implementation of gerp to open as the new output 
+file
+
+tinyData_newrefSorted.txt      : a sorted file that one of the commands in the
+tinyDataQuery_ref.txt asks reference implementation of gerp to open as the new
+output file
+
+smallGutenbergQuery.txt        : a file with various commands to use on the 
+smallGutenberg directory provided by the CS department to test our 
+implementation of gerp.
+
+smallGutenbergQuery_ref.txt    : a file with various commands to use on the 
+smallGutenberg directory provided by the CS department to test reference 
+implementation of gerp.
+
+smallGutenberg_ourSorted.txt   : a file with the sorted results of the commands
+in smallGutenbergQuery.txt implemented on our implementation of gerp
+
+smallGutenberg_refSorted.txt   : a file with the sorted results of the commands
+in smallGutenbergQuery_ref.txt implemented on reference implementation of gerp
+
+smallGutenberg_newourSorted.txt: a sorted file that one of the commands in the
+smallGutenbergQuery.txt asks our implementation of gerp to open as the new 
+output file 
+
+smallGutenberg_newrefSorted.txt: a sorted file that one of the commands in the
+smallGutenbergQuery_ref.txt asks reference implementation of gerp to open as 
+the new output file
+
+NOTE: We couldn't submit the files: smallGutenberg_newourSorted.txt and 
+smallGutenberg_newrefSorted.txt because of the space reasons.
+--------------------------------------------------------------------------- 
+
+(e) Compiling and running the program
+To compile the program, type make or make gerp to the terminal. To run,
+write "./gerp inputDirectory outputFile" with the appropriate directory and 
+file names.
+---------------------------------------------------------------------------
+
+(f) Architectural Overview
+
+MapBuilder class: 
+The main structure of the MapBuilder class is an array of pointers to 
+ChainNodes called chainedMap. Each ChainNode holds a string (lower case version
+of the word) as its key, a list of pointers to CaseSensitive structs as its 
+value, and a pointer to the next ChainNode in case there are more than one node
+assigned to the same index of the chainedMap array. Each CaseSensitive struct 
+holds a string (original version of the word) and pointer to a set of strings 
+where each string holds information about the file and line numbers the word 
+was found at. These strings are formatted such that the numbers before '/'
+represent the file number and the numbers after the separator represent the 
+line number.
+
+DictionaryBuilder class:
+The DictionaryBuilder class uses the FSTree class to build a tree of DirNodes
+where each node represents a sub directory or a file in the given directory.
+The main structure of this class is a vector of pathsAndFiles structs called 
+files. Each pathsAndFiles struct holds a pointer to a string representing 
+the path of each accessible file in the directory (which are acquired by the
+FSTree) and another pointer to a vector of strings called fileLines where each 
+element of the vector represents a line of the associated file. While recording
+the lines into the fileLines vector, the program traverses each line and calls
+MapBuilder::insertNewWord function to insert the word and its path and line 
+info to the MapBuilder instance of the DictionaryBuilder class. When the user
+asks for information about a specific word, appropriate search function from 
+the MapBuilder class is called, and the file path, line number, and the line 
+itself associated with the word is printed to the output stream.
+---------------------------------------------------------------------------
+
+(g) Outline of the data structures and algorithms
+
+Data Structures in MapBuilder:
+The main structure of this program is a chainedMap, which is an array of size 
+100, that holds pointers to a ChainNode struct. The ChainNodes were used in 
+this program to create a linked lists in the case of collisions, and linked 
+lists were beneficial as the insertion time complexity of this data structure 
+is constant. ChainNode struct holds the lowercase version of the key word 
+(key), a list of pointers to CaseSensitive structs (value), and a pointer to 
+the next ChainNode. ChainNodes are places into the chainedMap by using a hash 
+function. A CaseSensitive struct holds the original version of the word and 
+pointer to a set of strings that represent the file and line number where the 
+word was found at. The sets were the most reasonable data structure for holding
+information about the files and lines to avoid duplicates and save as much 
+space as possible. The usage of pointers is to save from space; instead of 
+copying sets, lists, CaseSensitive structs, and ChainNodes, we pass them by 
+reference when needed. Moreover, the usage of hashing is to decrease the time 
+complexity when searching for a word in the map, which is explained in detail 
+below.
+
+We decide to use a chainedMap and the structs because insertion of new words
+and their information, as well as searching for the words in the map happens
+in a reasonable time and takes a reasonable amount of space. Here are some 
+important functions we want to mention in terms of time and space complexity:
+  -expand: Our chainedMap array starts with a size of 100, which we thought was
+  a reasonable starting size as a larger size might have taken an unneccessary
+  amount of space, and a smaller array would result in expand being called more
+  frequently. Expand function creates an array with a bigger size and traverses
+  each index of the old array as well as each ChainNode at the index (if there 
+  are any) to rehash all the ChainNodes to the new array. The time complexity
+  of this functions is O(oldMapSize + numItemsInMap) as it visits all the 
+  indices of the map (oldMapSize) and all the ChainNodes which totals to 
+  numItemsInMap.
+  -insert: To insert a new word and its information into the map, we use the 
+  insertNewWord function, which calculates the word's hash value using the hash
+  function. If there is no other ChainNode at that index, the program creates a
+  new ChainNode with the given word/value pair and places it to that index in 
+  the map and this takes O(1) time (BEST CASE). If the index is not empty, the 
+  program checks if there is a ChainNode at that index with the given word 
+  (lowercase) as the key. If there is not, it creates a new ChainNode and 
+  inserts it to that index. This takes O(n) time, where n is the number of 
+  ChainNodes at that index. If such a ChainNode exists, the program checks if a
+  CaseSensitive struct with the original version of the word exists. If it 
+  doesn't exist, the program creates a new CaseSensitive struct with the given 
+  word and its information and pushes a pointer to that struct to the list of 
+  pointers of the ChainNode. If it does exist, the program inserts the path and
+  and line information to the set associated with the struct. Either way, the 
+  process of going through ChainNodes to find the node with the appropriate key
+  take O(n) where n is the number of ChainNodes at that index, and then going 
+  through the list if CaseSensitive structs to find the structs with the 
+  specific version of the word takes O(n) where n is the number of 
+  CaseSensitive structs in the value list of the ChainNode. Overall, the time
+  complexity in this situation will be one of the last two O(n) complexities
+  listed, whichever is larger (WORST CASE). 
+  -find: to find a word (case sensitive or insensitive), the program first 
+  finds the hash index for the lower case version of the word and then 
+  retrieves the pointer at that index of the chainedMap. As chainedMap is an 
+  array, the time complexity of the retriaval when the index is known in 
+  constant and that is the primary reason we chose to implement the map with an
+  array. Once the pointer at the index is retrieved, the program checks if the 
+  pointer is nullptr. In this case, the search is done with a "not found" 
+  message, and the time complexity overall is O(1) (BEST CASE). If the pointer
+  at the index is not nullptr, the program traverses through all the ChainNodes
+  in the linked list that pointer points to. If the search is case insensitive,
+  the search stops once the ChainNode with the lower case version of the word 
+  is found and the value list associated with the key is returned, which means 
+  the time complexity is O(n), where n is the number of ChainNodes at the same
+  index. If the search is case insensitive, the search continues by traversing
+  all the CaseSensitive structs in the list associated with the ChainNode. In 
+  this case, the time complexity is either O(n) where n is the number of 
+  ChainNodes at the same index OR O(n) where n is the number of CaseSensitive
+  structs associated with the ChainNode, whichever is greater.
+
+
+Data Structures in DictionaryBuilder:
+The main data structure used in this program is a vector called files that 
+holds the pathsAndFiles structs. pathsAndFiles struct holds a pointer to a 
+string that represents the path of a file in the directory and a pointer to a 
+vector of strings called fileLines where each element of the vector represents 
+a line of the associated file. Again, the usage of pointers here is to save 
+from space; instead of copying strings and vectors, we pass them by reference 
+when needed. Here are some important processes we want to mention in terms of 
+time and space complexity:
+  -traversing the tree: When the program is called, it builds a tree of 
+  DirNodes using the FSTree class, where each node represent a sub directory 
+  or a file in the given directory. After building the tree, the program visits
+  each node of the FSTree to stores the path and names of all the accessible 
+  files in pathsAndFiles structs, and then pushes the structs into the files 
+  vector. This operation has the time complexity O(n), where n is the number of
+  sub-directories + number of files in a given directory, since this is the 
+  time complexity of traversing the FSTree. 
+  -reading words from the files: the program traverses the files vector, 
+  opens the path in the each pathsAndFiles struct, reads each line in the file 
+  and pushes the lines in the fileLines vector of the pathsAndFiles struct 
+  that it got the file path from. At the same time, the program gets each word 
+  in the current line, computes its path and line numbers, and inserts the word
+  and the path and line information to the map. The operation of visiting each 
+  word has a time complexity of O(n), where n is the number of words in the 
+  given directory (including all sub directories and the files). Overall, the 
+  total time complexity is this one multiplied by the time complexity of map
+  insertion (explained above): O(n)*O(insertion), where n is the number of 
+  words in the directory.
+  -finding and printing information about a word: if the search for the word is
+  case insensitive, the finder function from the MapBuilder class returns a 
+  pointer to a list of CaseSensitive struct pointers. The program traverses 
+  that list and traverses the each set associated with the struct to extract 
+  the path and line indices. The time complexity of this process is O(# of 
+  CaseSensitive structs) * O(# of string in each infoSet). Once the path and 
+  line indices are known, the file paths and line itself can be retrieved from 
+  the vectors files and fileLines in constant time as vectors allow constant 
+  access. If the search is case sensitive, the finder from the MapBuilder 
+  returns a pointer to a CaseSensitive struct, and the the program traverses 
+  the infoSet associated with the struct and retrieves the paths and lines the
+  same way as it did for the case insensitive search. Then, the time complexity
+  of this process is O(n) where n is the number of strings in the infoSet.
+
+
+Algorithms:
+
+-Algorithm 1: Word Search
+To find the information given a keyword, two main functions are used from the
+DictionaryBuilder class: caseInsensitiveSearch and caseSensitiveSearch.
+In caseInsensitiveSearch search, first the nonalphanumeric characters are
+removed from the word and the word is converted to lowercase version. In this
+way, the word is prepared to be searched for in the map. Then, 
+findCaseInsensitive function is used from the MapBuilder class and the list
+of pointers to CaseSensitive structs are obtained that corresponds to the
+given specific keyword. The obtained list is checked to see if it is nullptr,
+meaning that such a key word does not exist in the map. In that case, a "not
+found" message is printed to the output file. After making sure that the list 
+is not nullptr, duplicate issues are handled. Address duplicates (when a word 
+is present in the same line more than once) were already handled in the 
+MapBuilder class. However, as this is an insensitive word search, the address 
+duplicates for different versions of the same word present in the same line 
+more than once should also be handled. To prevent this, a new set of strings 
+were created and the addresses from the obtained list are inserted into this 
+new set. Then, the function searchPrinter was utilized to print the path and 
+line information in the given format by traversing the newly created set of
+addresses. 
+Similarly, in caseSensitiveSearch, first nonalphanumeric characters are
+removed from the word and the word is converted to lowercase version. Then, 
+findCaseInsensitive function is called to obtain the list of pointers to 
+CaseSensitive structs that corresponds to the given keyword. Similarly, the 
+list is checked to see if it is a nullptr, meaning that no such key word
+exists in the map. In that case, an appropriate message was printed in the
+output file. When the list is not a nullptr, findCaseSensitive function from 
+the MapBuilder class is called with the obtained list and the original version 
+of the searched word. In this way, the the spesific CaseSensitive struct (that 
+corresponds to the original version of the word, not the lowercase) was 
+obtained from the provided list. Finally, function searchPrinter was utilized 
+to print the path and line information in the given format from that specific 
+CaseSensitive struct.
+
+-Algorithm 2: (Possible) Word Collisions
+When a word is being inserted in the MapBuilder class to the chainedMap array, 
+the program first expands the array if necessary and then turns the word to its
+lower case version to find the index to insert the word at using the hash 
+function. If that index is empty (meaning it points to nullptr), the program 
+creates a new ChainNode with the word as the key and a list of CaseSensitive 
+struct pointers as value and make that index of the array point to this newly 
+created ChainNode. However, if the index does not point to a nullptr, either 
+there is another ChainNode with a different word (collision) or the lower case 
+version of the word already exists in the map. In this case, the helper
+function insertAtOccupiedIndex is called. This helper first checks whether this 
+situation is a collision, meaning none of the ChainNodes at this index has the 
+lower case version of the word as its key. If this is the case, the function 
+creates a new ChainNode with the lowercase word as its key, and inserts it to 
+the front of the linked lists of ChainNodes at that index. On the other hand, 
+if one of ChainNodes occupying the index has the lowercase version of the word 
+as its key, the function looks into the list of pointers to CaseSensitive 
+structs (value) associated with that key to see if any of the CaseSensitive 
+structs has the original version of the word as its textOriginal variable. 
+If a CaseSensitive struct exists for that version of the word, the function 
+just inserts the new pathAndLine info to the setInfo associated with that 
+CaseSensitive struct. On the contrary, if this version of the word does not 
+exist in any of the CaseSensitive structs, a new CaseSensitive struct is 
+created and a pointer to this struct is added to the list associated with the 
+ChainNode holding the lower case version of the word.
+---------------------------------------------------------------------------
+
+(h) Testing the various parts of this program
+
+Unit tests:
+- The unit tests are to check the accuracy of the functions in the 
+MapBuilder and DictionaryBuilder classes. The tests are designed separately 
+for each function. While preparing the tests, edge cases are considered and 
+tested. 
+- To give some examples from the MapBuilder class, insertNewWord function were 
+tested with a map that is totally empty, with two different versions of the 
+same word, with a word that is found in two different lines (two different 
+addresses present for the same word), with a word that is present in a line 
+more than once, and with a case where collision occurs. The functions 
+findChainNode and findCaseSensitive were tested with basic cases where a linked
+list of ChainNodes or a list of CaseSensitive structs were created, and a 
+pointer to a specific ChainNode or a CaseSensitive struct was expected. The 
+function findCaseInsensitive was tested with an existing word in the map, a 
+non-existing word in the map and with an empty map. 
+- To give some examples from the DictionaryBuilder class, the function 
+fileReader was tested by reading the files sampleFile.txt and emptyFile.txt in 
+a small sample directory, and the findCaseSensitive and findCaseInsensitive 
+functions were called on the created map with various existing words and with a
+word that doesn't exist in the map to see if the files were read correctly. 
+The function caseInsensitiveSearch and caseSensitiveSearch were tested with 
+directories that differs in length: sampleDir (that contains en empty file 
+emptyFile.txt and sampleFile.txt), smallGutenberg, mediumGutenberg, and 
+largeGutenberg. These directories were tested with different key words such as
+words that exist/nonexist in the map, full alphanumerical words, full 
+non-alphanumerical words, words that have non-alphanumerical characters at the 
+beginning, in the middle, and at the end. The tests where the directories 
+smallGutenberg, mediumGutenberg, and largeGutenberg were used gave timeout in 
+valgrind test. Therefore, they were commented out and later tested using diff 
+against the reference implementation and gerp_perf command.
+
+Using diff:
+The program as a whole was tested in the bash with directories tinyData and 
+smallGutenberg by giving the same commands to the reference implementation and
+comparing the results. The commands given to these tests had all 
+non-alphanumeric characters, trailing/leading non-alphanumeric characters, 
+non-existing words, and case sensitive/insensitive searches with regular words,
+and these commands are recorded in the files tinyDataQuery.txt, 
+tinyDataQuery_ref.txt, smallGutenbergQuery.txt, and 
+smallGutenbergQuery_ref.txt. Each test had two output files: one given at the
+beginning as a command line argument and one opened with the command @f. After
+calling the functions, the output files were sorted (into files called
+tinyData_ourSorted.txt, tinyData_refSorted.txt, tinyData_newourSorted.txt,
+tinyData_newrefSorted.txt, smallGutenberg_ourSorted.txt, 
+smallGutenberg_refSorted.txt, smallGutenberg_newourSorted.txt, and 
+smallGutenberg_newrefSorted.txt) and all the pairs of our implementation and 
+reference implementation were compared using the diff command. The outputs to 
+cout and cerr were also compared with the diff command. 
+This same procedure was also implemented using an empty directory and entering
+a wrong number of command line arguments to compare how the programs react.
+
+Using gerp_pref:
+As mediumGutenberg and largeGutenberg were too large to run and compare the 
+outputs quickly (and as we already checked that the program works properly
+using tinyDir and smallGutenberg), we used gerp_perf command to see the time 
+and space our program took to implement the commands in smallGutenbergQuery.txt
+on mediumGutenberg and largeGutenberg. As can be seen from the result below, 
+the time was always under 10 minutes and space was always under 6 GB.
+
+
+gerp_perf /comp/15/files/proj4-test-dirs/mediumGutenberg 
+                        mediumGutenberg_ourOutput.txt < smallGutenbergQuery.txt
+
+Time (hh:mm:ss or m:ss):
+0:23.47
+Reference Time (hh:mm:ss or m:ss):
+0:06.95
+Memory usage (GB):
+.754306
+Reference Memory usage (GB):
+.561248
+mediumGutenberg_ourOutput.txt contains your program output
+
+
+gerp_perf /comp/15/files/proj4-test-dirs/largeGutenberg 
+                        largerGutenberg_ourOutput.txt < smallGutenbergQuery.txt
+Time (hh:mm:ss or m:ss):
+1:39.88
+Reference Time (hh:mm:ss or m:ss):
+0:22.73
+Memory usage (GB):
+3.064342
+Reference Memory usage (GB):
+3.634563
+largerGutenberg_ourOutput.txt contains your program output
+---------------------------------------------------------------------------
